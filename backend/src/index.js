@@ -7,9 +7,10 @@ const { setupRoutes } = require("./routes");
 const app = express();
 dotenv.config();
 
-
 configureMiddleware(app);
+
 connectDatabase();
+
 setupRoutes(app);
 
 const port = 4000

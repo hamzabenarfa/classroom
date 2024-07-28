@@ -49,7 +49,7 @@ const login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    return res.status(200).json({ user: others, accessToken });
+    return res.status(200).json({ userInfo: others, accessToken });
 
   } catch (err) {
     console.error(err); // Log the error for debugging
