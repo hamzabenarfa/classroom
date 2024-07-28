@@ -27,13 +27,21 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   const { email, password } = req.body;
   try {
+    if(!email || !password) {
+      return res.status(400).json("Veuillez remplir tous les champs!");
+    }
+
     const user = await User.findOne({ email });
-    !user && res.status(400).json("Wrong credentials!");
+    if (!user) {
+      return res.status(400).json("mail invalide!");
+    }
 
     const pwdValidated = await bcrypt.compare(password, user.password);
-    !pwdValidated && res.status(400).json("Wrong credentials!");
+    if (!pwdValidated) {
+      return res.status(400).json("mdp invalide!");
+    }
 
-    const { password: undefined, ...others } = user._doc;
+    const { password: _, ...others } = user._doc; // Using _ as a placeholder variable
 
     const accessToken = jwt.sign(
       { user: { id: user._id, role: user.role } },
@@ -41,12 +49,13 @@ const login = async (req, res) => {
       { expiresIn: "1d" }
     );
 
-    pwdValidated
-      ? res.status(200).json({ user: others, accessToken })
-      : res.status(400).json("Wrong credentials!");
+    return res.status(200).json({ user: others, accessToken });
+
   } catch (err) {
-    res.status(500).json(err);
+    console.error(err); // Log the error for debugging
+    return res.status(500).json("Internal server error");
   }
 };
+
 
 module.exports = { register, login };
