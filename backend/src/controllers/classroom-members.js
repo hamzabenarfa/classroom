@@ -1,0 +1,58 @@
+const classRoomMembers = require("../models/classroom-members");
+const classRoom = require("../models/classroom");
+const user = require("../models/user");
+
+const addMember = async (req, res) => {
+  const userId = req.user.id;
+  const role = req.user.role;
+  const classroomId = req.params.classroomId;
+  const studentId = req.params.studentId;
+  try {
+    if (role !== "teacher") {
+      return res
+        .status(401)
+        .json({ message: "You are not a teacher" });
+    }
+
+    const myClassroom = await classRoom.findOne({
+      _id: classroomId,
+      ownerId: userId,
+    });
+    
+    if (!myClassroom) {
+      return res.status(401).json({ message: "Not your classroom" });
+    }
+    
+    const userExist = await user.findOne({ 
+      _id: studentId,
+      role: "student"
+    });
+
+    if (!userExist) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    const memberExist = await classRoomMembers.findOne({
+      classRoomId:classroomId,
+      memberId:studentId,
+    });
+
+    if (memberExist) {
+      return res.status(409).json({ message: "Student already in classroom" });
+    }
+
+    const newMember = new classRoomMembers({
+      classRoomId:classroomId,
+      memberId:studentId,
+    });
+
+    const savedMember = await newMember.save();
+
+    return res.status(201).json(savedMember);
+
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+module.exports = addMember;
