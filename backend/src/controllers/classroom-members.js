@@ -69,7 +69,7 @@ const joinClassroom = async (req, res) => {
     const classroom = await classRoom.findOne({ joinKey });
 
     if (!classroom) {
-      return res.status(404).json({ message: "Classroom not found" });
+      return res.status(404).json({ message: "JoinKey Invalid" });
     }
 
     const memberExist = await classRoomMembers.findOne({
