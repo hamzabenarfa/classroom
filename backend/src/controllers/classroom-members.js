@@ -55,4 +55,44 @@ const addMember = async (req, res) => {
   }
 };
 
-module.exports = addMember;
+
+const joinClassroom = async (req, res) => {
+  const userId = req.user.id;
+  const role = req.user.role;
+  const joinKey = req.params.joinKey;
+
+  try {
+    if (role !== "student") {
+      return res.status(401).json({ message: "You are not a student" });
+    }
+
+    const classroom = await classRoom.findOne({ joinKey });
+
+    if (!classroom) {
+      return res.status(404).json({ message: "Classroom not found" });
+    }
+
+    const memberExist = await classRoomMembers.findOne({
+      classRoomId:classroom._id,
+      memberId:userId,
+    });
+
+    if (memberExist) {
+      return res.status(409).json({ message: "You are already in classroom" });
+    }
+
+    const newMember = new classRoomMembers({
+      classRoomId:classroom._id,
+      memberId:userId,
+    });
+
+    const savedMember = await newMember.save();
+
+    return res.status(201).json(savedMember);
+
+    
+  } catch (error) {
+    res.status(500).json(error);   
+  }
+}
+module.exports = {addMember,joinClassroom};

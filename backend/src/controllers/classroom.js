@@ -3,7 +3,7 @@ const classRoom = require("../models/classroom");
 const createClassroom = async (req, res) => {
   const userId = req.user.id;
   const role = req.user.role;
-  const { name, joinKey } = req.body;
+  const { name } = req.body;
   try {
     if (role !== "teacher") {
       return res
@@ -11,6 +11,8 @@ const createClassroom = async (req, res) => {
         .json({ message: "You are not authorized to create a classroom" });
     }
     
+    const joinKey = Math.random().toString(36).substring(2, 8).toUpperCase();
+
     const newClassRoom = new classRoom({
       ownerId: userId,
       name,

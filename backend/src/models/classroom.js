@@ -7,7 +7,7 @@ const classRoomSchema = new mongoose.Schema({
   },
   joinKey: {
     type: String,
-    default:""
+    default: ''
   },
   ownerId: {
     type: mongoose.Schema.Types.ObjectId,
