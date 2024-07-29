@@ -11,6 +11,13 @@ const createClassroom = async (req, res) => {
         .json({ message: "You are not authorized to create a classroom" });
     }
     
+    const existingClassroom = await classRoom.findOne({ name , ownerId: userId });
+    if (existingClassroom) {
+      return res
+        .status(400)
+        .json({ message: "Classroom with this name already exists" });
+    }
+
     const joinKey = Math.random().toString(36).substring(2, 8).toUpperCase();
 
     const newClassRoom = new classRoom({
@@ -19,7 +26,7 @@ const createClassroom = async (req, res) => {
       joinKey,
     });
     const savedClassRoom = await newClassRoom.save();
-    return res.status(201).json(savedClassRoom);
+    return res.status(201).json({ message: "Classroom created", savedClassRoom });
   } catch (error) {
     return res.status(500).json(error);
   }

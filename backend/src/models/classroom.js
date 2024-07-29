@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 const classRoomSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true,
+    required: [true, 'Name is required'],
+    maxlength: [100, 'Name cannot be longer than 250 characters'],
   },
   joinKey: {
     type: String,
