@@ -25,4 +25,20 @@ const createClassroom = async (req, res) => {
   }
 };
 
-module.exports = createClassroom;
+const getMyClassrooms = async (req, res) => {
+  const userId = req.user.id;
+  const role = req.user.role;
+  try {
+    if (role !== "teacher") {
+      return res
+        .status(401)
+        .json({ message: "You are not authorized to view classrooms" });
+    }
+    const classrooms = await classRoom.find({ ownerId: userId });
+    return res.status(200).json(classrooms);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+module.exports = {createClassroom,getMyClassrooms};

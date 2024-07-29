@@ -1,7 +1,8 @@
 const router = require('express').Router();
 
-const createClassroom = require('../controllers/classroom')
+const {createClassroom,getMyClassrooms} = require('../controllers/classroom')
 
+router.get('/myclassrooms', getMyClassrooms)  
 router.post('/',createClassroom)
 
 
