@@ -21,7 +21,7 @@ const ClassRoomList = () => {
   };
   
   return (
-    <div className=" space-y-4">
+    <div className="p-4 space-y-4">
       <AddClassroom setUpdateTrigger={setUpdateTrigger} />
       <div className="flex flex-wrap gap-4">
         {myClassrooms.map((classroom: Classroom) => (

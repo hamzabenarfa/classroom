@@ -7,7 +7,7 @@ export const routes = [
     icon: Layout,
   },
   {
-    path: "/teacher/classroom-management",
+    path: "/teacher/classroom",
     label: "classroom-management",
     icon: BookOpenText,
   },
